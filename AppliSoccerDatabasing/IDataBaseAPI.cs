@@ -12,12 +12,13 @@ namespace AppliSoccerDatabasing
         public void CreateTables();
         public Task<List<Team>> GetUnregistredTeamsTask();
         public Task<List<Team>> GetUnregistredTeamsTask(string country);
-        public void InsertTeam(Team team);
+        public Task InsertTeamTask(Team team);
         public Task<bool> IsTeamExistTask(Team team);
         public Task<bool> IsRegisteredTeamTask(string teamID);
         public Task<bool> IsUsernameExistTask(string username);
-        public Task InsertUser(User user);
-        public Task MarkTeamAsRegister(string teamId);
+        public Task InsertUserTask(User user);
+        public Task MarkTeamAsRegisterTask(string teamId);
+        public Task<List<TeamMember>> GetTeamMembers(string teamId);
 
 
     }

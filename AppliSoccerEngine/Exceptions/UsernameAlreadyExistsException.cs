@@ -4,7 +4,7 @@ using System.Runtime.Serialization;
 namespace AppliSoccerEngine.Exceptions
 {
     [Serializable]
-    internal class UsernameAlreadyExistsException : Exception
+    public  class UsernameAlreadyExistsException : Exception
     {
         public UsernameAlreadyExistsException()
         {

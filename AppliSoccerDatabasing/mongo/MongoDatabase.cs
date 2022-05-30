@@ -11,9 +11,13 @@ namespace AppliSoccerDatabasing.mongo
     public class MongoDatabase : IDataBaseAPI
     {
         private CollectionsAccess _collectionAccess;
+        private TeamQueries _teamQueries;
+        private UserQueries _userQueries;
         public MongoDatabase()
         {
             _collectionAccess = new CollectionsAccess();
+            _teamQueries = new TeamQueries(_collectionAccess.GetTeamsCollection());
+            _userQueries = new UserQueries(_collectionAccess.GetUserCollection());
         }
         public void CreateDatabase()
         {
@@ -25,68 +29,51 @@ namespace AppliSoccerDatabasing.mongo
             // Collections will be created when accessing it
         }
 
+        public Task<List<TeamMember>> GetTeamMembers(string teamId)
+        {
+            return _userQueries.GetTeamMembers(teamId);
+        }
+
         public Task<List<Team>> GetUnregistredTeamsTask()
         {
-            return Task.Run(() =>
-           {
-               IMongoCollection<TeamDBModel> teamsCollection = _collectionAccess.GetTeamsCollection();
-               List<TeamDBModel> objectsFromDB = teamsCollection.Find(team => team.IsRegistred == false).ToList();
-               List<Team> result = DBModelConverter.ConvertTeams(objectsFromDB);
-               return result;
-           });
+            return _teamQueries.GetUnregistredTeamsTask();
         }
 
         public Task<List<Team>> GetUnregistredTeamsTask(string country)
         {
-            return Task.Run(() =>
-            {
-                IMongoCollection<TeamDBModel> teamsCollection = _collectionAccess.GetTeamsCollection();
-                List<TeamDBModel> objectsFromDB =
-                    teamsCollection.Find(team => team.IsRegistred == false && team.CountryName.ToLower() == country.ToLower()).ToList();
-                List<Team> result = DBModelConverter.ConvertTeams(objectsFromDB);
-                return result;
-            });
+            return _teamQueries.GetUnregistredTeamsTask(country);
         }
 
-        public void InsertTeam(Team team)
+        public Task InsertTeamTask(Team team)
         {
-            IMongoCollection<TeamDBModel> teamsCollection = _collectionAccess.GetTeamsCollection();
-            TeamDBModel teamDBModel = DBModelConverter.ConvertTeam(team);
-            teamsCollection.InsertOne(teamDBModel);
+            return _teamQueries.InsertTeamTask(team);
         }
 
-        public Task InsertUser(User user)
+        public Task InsertUserTask(User user)
         {
-            throw new NotImplementedException();
+            return _userQueries.InsertUserTask(user);
         }
 
-        public Task<bool> IsRegisteredTeam(string teamID)
-        {
-            IMongoCollection<TeamDBModel> teamsCollection = _collectionAccess.GetTeamsCollection();
-            return teamsCollection.Find(teamFromDB => teamFromDB.Id == teamID && teamFromDB.IsRegistred).AnyAsync();
-        }
 
         public Task<bool> IsRegisteredTeamTask(string teamID)
         {
-            throw new NotImplementedException();
+            return _teamQueries.IsRegisteredTeamTask(teamID);
         }
 
 
         public Task<bool> IsTeamExistTask(Team team)
         {
-            IMongoCollection<TeamDBModel> teamsCollection = _collectionAccess.GetTeamsCollection();
-            TeamDBModel teamDBModel = DBModelConverter.ConvertTeam(team);
-            return teamsCollection.Find(teamFromDB => teamFromDB.Id == team.Id).AnyAsync();
+            return _teamQueries.IsTeamExistTask(team);
         }
 
         public Task<bool> IsUsernameExistTask(string username)
         {
-            throw new NotImplementedException();
+            return _userQueries.IsUsernameExistTask(username);
         }
 
-        public Task MarkTeamAsRegister(string teamId)
+        public Task MarkTeamAsRegisterTask(string teamId)
         {
-            throw new NotImplementedException();
+            return _teamQueries.MarkTeamAsRegisterTask(teamId);
         }
     }
 }

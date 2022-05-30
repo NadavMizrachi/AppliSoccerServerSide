@@ -5,5 +5,7 @@ namespace AppliSoccerObjects.Modeling
 
     public enum EventType { Game, Training, Other}
 
+    public enum MemberType { Admin, Staff, Player}
+
 
 }

@@ -11,8 +11,7 @@ namespace AppliSoccerObjects.Modeling
         public string CountryName { get; set; }
         public string LeagueName { get; set; }
         public bool IsRegistered { get; set; }
-        public List<Player> Players { get; set; }
-        public List<Staff> StaffMembers{ get; set; }
+        public List<TeamMember> TeamMembers { get; set; }
         public User Admin { get; set; }
 
         public Team(string countryName, string name)

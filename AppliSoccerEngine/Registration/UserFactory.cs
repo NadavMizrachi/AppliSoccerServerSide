@@ -1,4 +1,5 @@
-﻿using AppliSoccerObjects.Modeling;
+﻿using AppliSoccerEngine.TeamMembers;
+using AppliSoccerObjects.Modeling;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -13,7 +14,8 @@ namespace AppliSoccerEngine.Registration
             {
                 Username = adminUsername,
                 Password = Passwords.HashPassword(adminPassword),
-                IsAdmin = true
+                IsAdmin = true,
+                TeamMember = TeamMemberFactory.CreateAdminTeamMember(teamId, adminUsername)
             };
         }
     }

@@ -15,6 +15,7 @@ namespace AppliSoccerEngine.Registration
         private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private IDataBaseAPI _dataBaseAPI = Database.GetDatabase();
         private IStatisticAPI _statisticAPI = ExternalStatisticSource.GetStatisticAPI();
+        private readonly Object _locker = new object();
 
         public RegistrationManager()
         {
@@ -46,7 +47,7 @@ namespace AppliSoccerEngine.Registration
                 }
                 else
                 {
-                    _dataBaseAPI.InsertTeam(team);
+                    _dataBaseAPI.InsertTeamTask(team);
                 }
             }
         }
@@ -79,28 +80,39 @@ namespace AppliSoccerEngine.Registration
             });
         }
 
+        public async Task RegisterUser(User user)
+        {
+            user.Password = Passwords.HashPassword(user.Password);
+            if (_dataBaseAPI.IsUsernameExistTask(user.Username).Result)
+            {
+                throw new UsernameAlreadyExistsException();
+            }
+            await _dataBaseAPI.InsertUserTask(user);
+        }
+
         public IEnumerable<string> GetCountries()
         {
             return SupportedCountries.GetCountries();
         }
 
-        public async Task RegisterTeamTask(string teamId, string adminUsername, string adminPassword)
+        public TeamMember RegisterTeam(string teamId, string adminUsername, string adminPassword)
         {
-            // Check if team is unregistered
-            if(await _dataBaseAPI.IsRegisteredTeamTask(teamId))
-            {
-                throw new TeamAlreadyRegisteredException();
-            }
-            // Validate username and password
-            if(await _dataBaseAPI.IsUsernameExistTask(adminPassword))
-            {
-                throw new UsernameAlreadyExistsException();
-            }
-            // Register team & user
             User user = UserFactory.CreateAdminUser(teamId, adminUsername, adminPassword);
-            await _dataBaseAPI.InsertUser(user);
-            await _dataBaseAPI.MarkTeamAsRegister(teamId);
+            lock (_locker)
+            {
+                if (_dataBaseAPI.IsRegisteredTeamTask(teamId).Result)
+                {
+                    throw new TeamAlreadyRegisteredException();
+                }
+                if (_dataBaseAPI.IsUsernameExistTask(adminUsername).Result)
+                {
+                    throw new UsernameAlreadyExistsException();
+                }
+                _dataBaseAPI.InsertUserTask(user).Wait();
+                _dataBaseAPI.MarkTeamAsRegisterTask(teamId).Wait();
+            }
+            return user.TeamMember;
         }
-        
+            
     }
 }

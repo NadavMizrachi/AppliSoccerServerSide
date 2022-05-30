@@ -23,9 +23,9 @@ namespace AppliSoccerDatabasing.mongo
             return GetCollection<TeamDBModel>(_teamsCollection);
         }
 
-        public IMongoCollection<TeamDBModel> GetUserCollection()
+        public IMongoCollection<UserDBModel> GetUserCollection()
         {
-            return GetCollection<TeamDBModel>(_usersCollection);
+            return GetCollection<UserDBModel>(_usersCollection);
         }
     }
 }

@@ -1,9 +1,7 @@
-﻿
-using System.Collections.Generic;
-
+﻿using System.Collections.Generic;
 namespace AppliSoccerObjects.Modeling
 {
-    public class Staff : TeamMember
+    public class StaffAdditionalInfo
     {
         public bool IsCoach { get; set; }
         public List<Role> ManagedRoles { get; set; }

@@ -7,6 +7,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using AppliSoccerEngine.Exceptions;
+using AppliSoccerObjects.ResponseObjects;
+using AppliSoccerRestAPI.MyCustomBinders;
 
 namespace AppliSoccerRestAPI.Controllers
 {
@@ -26,6 +29,7 @@ namespace AppliSoccerRestAPI.Controllers
         [HttpGet]
         public async Task<List<TeamDetails>> GetUnregisteredTeams([FromQuery]string country)
         {
+            _logger.LogInformation("Got request of GetUnregisteredTeams");
             var teams = await _registrationManager.GetUnregisteredTeams(country);
             return teams;
         }
@@ -33,6 +37,7 @@ namespace AppliSoccerRestAPI.Controllers
         [HttpGet]
         public List<string> GetCountries()
         {
+            _logger.LogInformation("Got request of GetCountries");
             return _registrationManager.GetCountries().ToList();
         }
 
@@ -43,11 +48,51 @@ namespace AppliSoccerRestAPI.Controllers
         }
 
         [HttpPost]
-        public bool RegisterTeam([FromQuery] string teamId,
+        public TeamMember RegisterTeam([FromQuery] string teamId,
             [FromQuery] string username,
             [FromQuery] string password)
         {
+            _logger.LogInformation($"Got request to RegisterTeam. Team_ID: ${teamId}    Username: ${username}   Password: ${password}");
+            TeamMember teamMember = null;
+            try
+            {
+                teamMember = _registrationManager.RegisterTeam(teamId, username, password);
+            }catch (UsernameAlreadyExistsException ex)
+            {
+                _logger.LogInformation($"User name ${username} is already registered.");
+                return null;
+            }
+            catch (TeamAlreadyRegisteredException ex)
+            {
+                _logger.LogInformation($"Team with teamId: ${teamId} is already registered.");
+                return null;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError($"Error whule trying to register temaid: ${teamId}");
+                return null;
+            }
+            return teamMember;
+        }
 
+        [HttpPut]
+        public async Task<bool> CreateUser([ModelBinder(typeof(UserBinder))]User user)
+        {
+            _logger.LogInformation("Got request of CreateUser. Details: Username " + user.Username + " TeamMember: " + user.TeamMember);
+            var isCreationSucceed = false;
+            try
+            {
+                await _registrationManager.RegisterUser(user);
+                isCreationSucceed = true;
+            }catch(UsernameAlreadyExistsException ex)
+            {
+                _logger.LogInformation($"User name ${user.Username} is already registered.");
+            }
+            catch ( Exception ex)
+            {
+                _logger.LogError("Error has occurred while trying to create new user : " + user.Username, ex.Message);
+            }
+            return isCreationSucceed;
         }
     }
       
