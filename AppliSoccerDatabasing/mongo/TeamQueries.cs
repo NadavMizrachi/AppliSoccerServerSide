@@ -62,5 +62,6 @@ namespace AppliSoccerDatabasing.mongo
             var options = new UpdateOptions { IsUpsert = true };
             return _collection.UpdateOneAsync(filter, updateDef, options);
         }
+
     }
 }

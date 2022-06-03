@@ -15,11 +15,13 @@ namespace AppliSoccerDatabasing
         public Task InsertTeamTask(Team team);
         public Task<bool> IsTeamExistTask(Team team);
         public Task<bool> IsRegisteredTeamTask(string teamID);
+        public Task<User> GetUser(string username);
         public Task<bool> IsUsernameExistTask(string username);
         public Task InsertUserTask(User user);
+        public Task<TeamMember> UpdateMember(string userId, TeamMember memberNewDetails);
         public Task MarkTeamAsRegisterTask(string teamId);
         public Task<List<TeamMember>> GetTeamMembers(string teamId);
-
-
+        public Task<bool> RemoveUser(string iD);
+        public Task<bool> IsExistCoach(string teamId);
     }
 }

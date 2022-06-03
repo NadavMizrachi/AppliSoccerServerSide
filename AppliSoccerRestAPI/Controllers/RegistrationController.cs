@@ -13,6 +13,7 @@ using AppliSoccerRestAPI.MyCustomBinders;
 
 namespace AppliSoccerRestAPI.Controllers
 {
+    // TODO Add time tag to logger
     [ApiController]
     [Route("api/[controller]/[action]")]
     public class RegistrationController : ControllerBase

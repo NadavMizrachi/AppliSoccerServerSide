@@ -5,7 +5,7 @@ using static AppliSoccerDatabasing.DBModels.DBEnums;
 
 namespace AppliSoccerDatabasing.DBModels
 {
-    public class PlayerDBModel : TeamMemberDBModel
+    public class PlayerAdditionalInfoDBModel : AdditionalInfoDBModel
     {
         public int Number { get; set; }
         public Role Role { get; set; }

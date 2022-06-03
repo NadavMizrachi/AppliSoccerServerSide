@@ -2,6 +2,7 @@
 using AppliSoccerObjects.Modeling;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace AppliSoccerDatabasing
@@ -48,6 +49,17 @@ namespace AppliSoccerDatabasing
             };
         }
 
+        public static User ConvertUser(UserDBModel userDBModel)
+        {
+            return new User()
+            {
+                Username = userDBModel.UserName,
+                Password = userDBModel.Password,
+                IsAdmin = userDBModel.IsAdmin,
+                TeamMember = ConvertTeamMember(userDBModel.TeamMember)
+            };
+        }
+
 
         public static List<TeamMember> ConvertTeamMembers(List<TeamMemberDBModel> teamMemberDBModelList)
         {
@@ -71,8 +83,64 @@ namespace AppliSoccerDatabasing
                 PhoneNumber = teamMember.PhoneNumber,
                 TeamId = teamMember.TeamId,
                 TeamName = teamMember.TeamName,
-                AdditionalInfo = teamMember.AdditionalInfo
+                AdditionalInfo = ConvertAdditionalInfo(teamMember.MemberType, teamMember.AdditionalInfo)
             };
+        }
+
+
+        public static AdditionalInfoDBModel ConvertAdditionalInfo(MemberType memberType, Object additionalInfo)
+        {
+            switch (memberType)
+            {
+                case MemberType.Admin:
+                    {
+                        return null;
+                    }
+                case MemberType.Staff:
+                    {
+                        var staffAditionalInfo = (StaffAdditionalInfo)additionalInfo;
+                        return new StaffAdditionalInfoDBModel()
+                        {
+                            IsCoach = staffAditionalInfo.IsCoach,
+                            ManagedRoles = staffAditionalInfo.ManagedRoles.Select(dbRoleEnum => ConvertRoleEnum(dbRoleEnum)).ToList()
+                        };
+                    }
+                case MemberType.Player:
+                    {
+                        var playerAdditionalInfo = (PlayerAdditionalInfo)additionalInfo;
+                        return new PlayerAdditionalInfoDBModel()
+                        {
+                            Number = playerAdditionalInfo.Number,
+                            Role = ConvertRoleEnum(playerAdditionalInfo.Role)
+                        };
+                    }
+
+                default: return null;
+            }
+        }
+
+        private static DBEnums.Role ConvertRoleEnum(Role RoleEnum)
+        {
+            switch (RoleEnum)
+            {
+                case Role.Attacker:
+                    {
+                        return DBEnums.Role.Attacker;
+                    }
+                case Role.Defender:
+                    {
+                        return DBEnums.Role.Defender;
+                    }
+                case Role.GoalKeeper:
+                    {
+                        return DBEnums.Role.GoalKeeper;
+                    }
+                case Role.Midfielder:
+                    {
+                        return DBEnums.Role.Midfielder;
+                    }
+                default: return DBEnums.Role.Defender;
+            }
         }
 
         public static TeamMember ConvertTeamMember(TeamMemberDBModel teamMemberDBModel)
@@ -80,7 +148,7 @@ namespace AppliSoccerDatabasing
             return new TeamMember
             {
                 BirthDate = teamMemberDBModel.BirthDate,
-                AdditionalInfo = teamMemberDBModel.AdditionalInfo,
+                AdditionalInfo = ConvertAdditionalInfo(teamMemberDBModel.MemberType, teamMemberDBModel.AdditionalInfo),
                 Description = teamMemberDBModel.Description,
                 FirstName = teamMemberDBModel.FirstName,
                 ID = teamMemberDBModel.ID,
@@ -90,6 +158,61 @@ namespace AppliSoccerDatabasing
                 TeamId = teamMemberDBModel.TeamId,
                 TeamName = teamMemberDBModel.TeamName
             };
+        }
+
+        public static Object ConvertAdditionalInfo(DBEnums.MemberType memberType , Object additionalInfoDBModel)
+        {
+            switch (memberType)
+            {
+                case DBEnums.MemberType.Admin:
+                    {
+                        return null;
+                    }
+                case DBEnums.MemberType.Staff:
+                    {
+                        var staffAditionalInfoDBModel = (StaffAdditionalInfoDBModel)additionalInfoDBModel;
+                        return new StaffAdditionalInfo()
+                        {
+                            IsCoach = staffAditionalInfoDBModel.IsCoach,
+                            ManagedRoles = staffAditionalInfoDBModel.ManagedRoles.Select(dbRoleEnum => ConvertRoleEnum(dbRoleEnum)).ToList()
+                        };
+                    }
+                case DBEnums.MemberType.Player:
+                    {
+                        var playerAdditionalInfoDBModel = (PlayerAdditionalInfoDBModel)additionalInfoDBModel;
+                        return new PlayerAdditionalInfo()
+                        {
+                            Number = playerAdditionalInfoDBModel.Number,
+                            Role = ConvertRoleEnum(playerAdditionalInfoDBModel.Role)
+                        };
+                    }
+
+                default: return null;
+            }
+        }
+
+        private static Role ConvertRoleEnum(DBEnums.Role dbRoleEnum)
+        {
+            switch (dbRoleEnum)
+            {
+                case DBEnums.Role.Attacker:
+                    {
+                        return Role.Attacker;
+                    }
+                case DBEnums.Role.Defender:
+                    {
+                        return Role.Defender;
+                    }
+                case DBEnums.Role.GoalKeeper:
+                    {
+                        return Role.GoalKeeper;
+                    }
+                case DBEnums.Role.Midfielder:
+                    {
+                        return Role.Midfielder;
+                    }
+                default: return Role.Defender;
+            }
         }
 
         private static DBEnums.MemberType ExtractMemberType(TeamMember teamMember)

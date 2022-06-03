@@ -16,5 +16,16 @@ namespace AppliSoccerEngine.TeamMembers
         {
             return _dataBaseAPI.GetTeamMembers(teamId);
         }
+
+        public Task<TeamMember> UpdateMemberDetails(TeamMember memberNewDetails)
+        {
+            // TODO create class that returns user id we providing that function TeamMember/User
+            return _dataBaseAPI.UpdateMember(userId: memberNewDetails.ID, memberNewDetails);
+        }
+
+        public Task<bool> RemoveMember(TeamMember memberToRemove)
+        {
+            return _dataBaseAPI.RemoveUser(memberToRemove.ID);
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using AppliSoccerDatabasing;
 using AppliSoccerEngine.Exceptions;
+using AppliSoccerEngine.TeamMembers;
 using AppliSoccerObjects.Modeling;
 using AppliSoccerStatisticAPI.ExternalAPISource;
 using System;
@@ -82,12 +83,33 @@ namespace AppliSoccerEngine.Registration
 
         public async Task RegisterUser(User user)
         {
-            user.Password = Passwords.HashPassword(user.Password);
+            if (!IsValidUserData(user))
+            {
+                throw new UserWithUnvalidDataException($"User :{user.Username} has invalid data. user.TeamMember={user.TeamMember}"); 
+            }
+
+            if (TeamMemberTypeRecognizer.IsCoach(user.TeamMember))
+            {
+                string teamId = user.TeamMember.TeamId;
+                if(await _dataBaseAPI.IsExistCoach(teamId))
+                {
+                    throw new CoachAlreadyExistsException($"Coach already exist for team: {user.TeamMember.TeamId}");
+                }
+            }
+            
             if (_dataBaseAPI.IsUsernameExistTask(user.Username).Result)
             {
                 throw new UsernameAlreadyExistsException();
             }
+            user.Password = Passwords.HashPassword(user.Password);
             await _dataBaseAPI.InsertUserTask(user);
+        }
+
+        private bool IsValidUserData(User user)
+        {
+            return (user != null) &&
+                    (user.TeamMember != null) &&
+                    (user.TeamMember.AdditionalInfo != null);
         }
 
         public IEnumerable<string> GetCountries()
@@ -97,6 +119,7 @@ namespace AppliSoccerEngine.Registration
 
         public TeamMember RegisterTeam(string teamId, string adminUsername, string adminPassword)
         {
+            //TODO Assign to the admin user the TEAM NAME
             User user = UserFactory.CreateAdminUser(teamId, adminUsername, adminPassword);
             lock (_locker)
             {

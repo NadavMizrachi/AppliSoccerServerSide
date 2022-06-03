@@ -71,9 +71,29 @@ namespace AppliSoccerDatabasing.mongo
             return _userQueries.IsUsernameExistTask(username);
         }
 
+        public Task<User> GetUser(string username)
+        {
+            return _userQueries.GetTeamMemberOfUser(username);
+        }
+
         public Task MarkTeamAsRegisterTask(string teamId)
         {
             return _teamQueries.MarkTeamAsRegisterTask(teamId);
+        }
+
+        public Task<TeamMember> UpdateMember(string userId, TeamMember memberNewDetails)
+        {
+            return _userQueries.UpdateMember(userId, memberNewDetails);
+        }
+
+        public Task<bool> RemoveUser(string userId)
+        {
+            return _userQueries.RemoveUser(userId);
+        }
+
+        public Task<bool> IsExistCoach(string teamId)
+        {
+            return _userQueries.IsCoachExit(teamId);
         }
     }
 }

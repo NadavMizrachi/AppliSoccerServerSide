@@ -1,4 +1,6 @@
-﻿using MongoDB.Driver;
+﻿using AppliSoccerDatabasing.DBModels;
+using MongoDB.Bson.Serialization;
+using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,6 +17,13 @@ namespace AppliSoccerDatabasing.mongo
         public DatabaseConnection()
         {
             InitConnectionString();
+            
+        }
+
+        private void RegisterObjectsHierarchy()
+        {
+            BsonClassMap.RegisterClassMap<PlayerAdditionalInfoDBModel>();
+            BsonClassMap.RegisterClassMap<StaffAdditionalInfoDBModel>();
         }
 
         private void InitConnectionString()
@@ -34,6 +43,7 @@ namespace AppliSoccerDatabasing.mongo
         public IMongoDatabase GetMongoDatabase()
         {
             var client = new MongoClient(_connectionString);
+            //RegisterObjectsHierarchy();
             return client.GetDatabase(_dbName);
         }
     }

@@ -16,7 +16,7 @@ namespace AppliSoccerDatabasing.DBModels
         public DateTime BirthDate{ get; set; }
         public string Description { get; set; }
         public string PhoneNumber { get; set; }
-        public Object AdditionalInfo { get; set; }
+        public AdditionalInfoDBModel AdditionalInfo { get; set; }
 
     }
 
