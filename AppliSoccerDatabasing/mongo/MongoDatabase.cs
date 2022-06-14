@@ -13,6 +13,8 @@ namespace AppliSoccerDatabasing.mongo
         private CollectionsAccess _collectionAccess;
         private TeamQueries _teamQueries;
         private UserQueries _userQueries;
+        private OrderQueries _orderQueries;
+        
         public MongoDatabase()
         {
             _collectionAccess = new CollectionsAccess();
@@ -95,5 +97,30 @@ namespace AppliSoccerDatabasing.mongo
         {
             return _userQueries.IsCoachExit(teamId);
         }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="order"></param>
+        /// <returns>ID of the order</returns>
+        public Task<String> InsertOrder(Order order)
+        {
+            return _orderQueries.InsertOrder(order);
+        }
+
+        public Task RemoveOrder(Order order)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> InsertOrderReceivings(List<OrderReceiving> orderReceivings)
+        {
+            return _orderQueries.InsertOrderReceiving(orderReceivings);
+        }
+
+        public Task<List<Order>> GetOrders(string receiverId, DateTime fromTime, DateTime endTime)
+        {
+            return _orderQueries.GetOrders(receiverId, fromTime, endTime);
+        }
+
     }
 }

@@ -94,5 +94,6 @@ namespace AppliSoccerDatabasing.mongo
                     (userDBModel.TeamMember.AdditionalInfo as StaffAdditionalInfoDBModel).IsCoach
             ).AnyAsync();
         }
+
     }
 }

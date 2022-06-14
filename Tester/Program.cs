@@ -54,7 +54,7 @@ namespace Tester
             Order order = new Order()
             {
                 Content = "Order content",
-                From = "Elyaniv",
+                SenderId = "Elyaniv",
                 To = "Miguel",
                 WasRead = false
             };
@@ -62,7 +62,7 @@ namespace Tester
             RestObjectWrraper wrraper = RestObjectWrraperSerializer.Serialize(order);
             Console.WriteLine("wrraper.Data: = " + wrraper.Data + " wrraper.Type = " + wrraper.Type);
             Order des = RestObjectWrraperDeserializer<Order>.Deserialize(wrraper);
-            Console.WriteLine($"Content :" + des.Content + " From :" + des.From + " To :" + des.To + " wasRead=" + des.WasRead);
+            Console.WriteLine($"Content :" + des.Content + " From :" + des.SenderId + " To :" + des.To + " wasRead=" + des.WasRead);
         }
     }
 }

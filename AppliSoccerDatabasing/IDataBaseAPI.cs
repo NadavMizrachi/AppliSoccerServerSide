@@ -23,5 +23,9 @@ namespace AppliSoccerDatabasing
         public Task<List<TeamMember>> GetTeamMembers(string teamId);
         public Task<bool> RemoveUser(string iD);
         public Task<bool> IsExistCoach(string teamId);
+        public Task<String> InsertOrder(Order order);
+        public Task RemoveOrder(Order order);
+        public Task<bool> InsertOrderReceivings(List<OrderReceiving> orderReceivings);
+        public Task<List<Order>> GetOrders(string receiverId, DateTime fromTime, DateTime endTime);
     }
 }

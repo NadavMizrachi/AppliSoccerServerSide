@@ -49,6 +49,56 @@ namespace AppliSoccerDatabasing
             };
         }
 
+        public static List<Order> ConvertOrders(List<OrderDBModel> orderDBModels)
+        {
+            List<Order> output = new List<Order>();
+            foreach (var orderDbModel in orderDBModels)
+            {
+                output.Add(ConvertOrder(orderDbModel));
+            }
+            return output;
+        }
+
+        public static List<OrderDBModel> ConvertOrders(List<Order> orders)
+        {
+            List<OrderDBModel> output = new List<OrderDBModel>();
+            foreach (var order in orders)
+            {
+                output.Add(ConvertOrder(order));
+            }
+            return output;
+        }
+
+        public static List<OrderReceivingDBModel> ConvertOrderReceivingList(List<OrderReceiving> orderReceivings)
+        {
+            List<OrderReceivingDBModel> output = new List<OrderReceivingDBModel>();
+            foreach (var orderReceiving in orderReceivings)
+            {
+                output.Add(ConvertOrderReceiving(orderReceiving));
+            }
+            return output;
+        }
+
+        public static OrderReceivingDBModel ConvertOrderReceiving(OrderReceiving orderReceiving)
+        {
+            return new OrderReceivingDBModel()
+            {
+                ReceiverId = orderReceiving.ReceiverId,
+                WasRead = orderReceiving.WasRead,
+                Order = ConvertOrder(orderReceiving.Order)
+            };
+        }
+
+        public static OrderReceiving ConvertOrderReceiving(OrderReceivingDBModel orderReceiving)
+        {
+            return new OrderReceiving()
+            {
+                ReceiverId = orderReceiving.ReceiverId,
+                WasRead = orderReceiving.WasRead,
+                Order = ConvertOrder(orderReceiving.Order)
+            };
+        }
+
         public static User ConvertUser(UserDBModel userDBModel)
         {
             return new User()
@@ -256,5 +306,40 @@ namespace AppliSoccerDatabasing
                 default: return MemberType.Player;
             }
         }
+
+
+        public static OrderDBModel ConvertOrder(Order order)
+        {
+            return new OrderDBModel()
+            {
+                Content = order.Content,
+                GameId = order.GameId,
+                MemberIdsReceivers = order.MemberIdsReceivers,
+                MembersIdsAlreadyRead = order.MembersIdsAlreadyRead,
+                RolesReceivers = order.RolesReceivers.Select(roleEnum => ConvertRoleEnum(roleEnum)).ToList(),
+                SenderId = order.SenderId,
+                SendingDate = order.SendingDate,
+                TeamId = order.TeamId,
+                Title = order.Title
+            };
+        }
+
+        public static Order ConvertOrder(OrderDBModel order)
+        {
+            return new Order()
+            {
+                ID = order.Id,
+                Content = order.Content,
+                GameId = order.GameId,
+                MemberIdsReceivers = order.MemberIdsReceivers,
+                MembersIdsAlreadyRead = order.MembersIdsAlreadyRead,
+                RolesReceivers = order.RolesReceivers.Select(roleEnum => ConvertRoleEnum(roleEnum)).ToList(),
+                SenderId = order.SenderId,
+                SendingDate = order.SendingDate,
+                TeamId = order.TeamId,
+                Title = order.Title
+            };
+        }
+
     }
 }
