@@ -20,6 +20,7 @@ namespace AppliSoccerDatabasing.mongo
             _collectionAccess = new CollectionsAccess();
             _teamQueries = new TeamQueries(_collectionAccess.GetTeamsCollection());
             _userQueries = new UserQueries(_collectionAccess.GetUserCollection());
+            _orderQueries = new OrderQueries(_collectionAccess.GetOrdersCollection(), _collectionAccess.GetOrderReceivingCollection());
         }
         public void CreateDatabase()
         {
@@ -109,10 +110,10 @@ namespace AppliSoccerDatabasing.mongo
 
         public Task RemoveOrder(Order order)
         {
-            throw new NotImplementedException();
+            return _orderQueries.RemoveOrder(order);
         }
 
-        public Task<bool> InsertOrderReceivings(List<OrderReceiving> orderReceivings)
+        public Task InsertOrderReceivings(List<OrderReceiving> orderReceivings)
         {
             return _orderQueries.InsertOrderReceiving(orderReceivings);
         }

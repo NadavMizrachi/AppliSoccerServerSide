@@ -28,12 +28,12 @@ namespace AppliSoccerDatabasing.mongo
             return orderDBModel.Id;
         }
 
-        public Task<bool> InsertOrderReceiving(List<OrderReceiving> orderReceivings)
+        public Task InsertOrderReceiving(List<OrderReceiving> orderReceivings)
         {
             return Task.Run( () => 
             {
                 List<OrderReceivingDBModel> orderDBModelList = DBModelConverter.ConvertOrderReceivingList(orderReceivings);
-                return _orderReceivingCollection.InsertManyAsync(orderDBModelList).IsCompletedSuccessfully;
+                return _orderReceivingCollection.InsertManyAsync(orderDBModelList);
             });
         }
 
@@ -57,6 +57,11 @@ namespace AppliSoccerDatabasing.mongo
                 .ToList();
 
             return DBModelConverter.ConvertOrders(orderDBModelList);
+        }
+
+        public Task RemoveOrder(Order order)
+        {
+            return _ordersCollection.DeleteOneAsync(order => order.Id.Equals(order.Id));
         }
     }
 }

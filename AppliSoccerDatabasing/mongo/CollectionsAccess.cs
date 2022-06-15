@@ -11,6 +11,8 @@ namespace AppliSoccerDatabasing.mongo
         private DatabaseConnection _databaseConnection = new DatabaseConnection();
         private const string _teamsCollection = "teams";
         private const string _usersCollection = "users";
+        private const string _ordersCollection = "orders";
+        private const string _orderReceivingCollection = "orderReceiving";
 
         private IMongoCollection<T> GetCollection<T>(string collectionName)
         {
@@ -26,6 +28,16 @@ namespace AppliSoccerDatabasing.mongo
         public IMongoCollection<UserDBModel> GetUserCollection()
         {
             return GetCollection<UserDBModel>(_usersCollection);
+        }
+
+        public IMongoCollection<OrderDBModel> GetOrdersCollection()
+        {
+            return GetCollection<OrderDBModel>(_ordersCollection);
+        }
+
+        public IMongoCollection<OrderReceivingDBModel> GetOrderReceivingCollection()
+        {
+            return GetCollection<OrderReceivingDBModel>(_orderReceivingCollection);
         }
     }
 }

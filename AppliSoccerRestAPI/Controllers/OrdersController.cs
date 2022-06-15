@@ -20,6 +20,7 @@ namespace AppliSoccerRestAPI.Controllers
         public OrdersController(ILogger<OrdersController> logger)
         {
             _logger = logger;
+            _ordersManager = new OrdersManager();
         }
 
         [HttpPut]

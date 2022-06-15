@@ -37,17 +37,14 @@ namespace AppliSoccerEngine.Orders
                 List<OrderReceiving> orderReceivings = await CreateOrderReceivingList(order);
                 
                 _logger.Info("Trying to insert the OrderReceiving list to database");
-                bool isUpdateOrderPerRecieverSucceed = await _dataBaseAPI.InsertOrderReceivings(orderReceivings);
-                if (!isUpdateOrderPerRecieverSucceed)
-                {
-                    _logger.Info("Updating orders for members has failed. Rolling back order saving...");
-                    _dataBaseAPI.RemoveOrder(order);
-                    return false;
-                }
+                await _dataBaseAPI.InsertOrderReceivings(orderReceivings);
             }
             catch (Exception ex)
             {
+                
                 _logger.Error("Error occurred during trying to save order in database", ex);
+                _logger.Info("Rolling back, Removing the order...");
+                _dataBaseAPI.RemoveOrder(order);
                 return false;
             }
             _logger.Info("Order creating was fully successfull!");
