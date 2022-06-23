@@ -123,5 +123,47 @@ namespace AppliSoccerDatabasing.mongo
             return _orderQueries.GetOrders(receiverId, fromTime, endTime);
         }
 
+        public Task<List<OrderReceiving>> FetchOrdersMetadata(DateTime upperBoundDate, int ordersQuantity, string receiverId)
+        {
+            return _orderQueries.FetchOrdersMetadata(upperBoundDate, ordersQuantity, receiverId);
+        }
+
+        public Task<List<OrderReceiving>> PullNewOrdersMetadata(DateTime lowerBoundDate, int ordersQuantity, string receiverId)
+        {
+            return _orderQueries.PullNewOrdersMetadata(lowerBoundDate, ordersQuantity, receiverId);
+        }
+
+        public Task<Order> GetOrder(string orderId, string askerId)
+        {
+            return _orderQueries.GetOrder(orderId, askerId);
+        }
+
+        public async Task<TeamMember> GetTeamMember(string memberId)
+        {
+            User user = await _userQueries.GetTeamMemberOfUser(memberId);
+            if (user == null)
+                return null;
+            return user.TeamMember;
+        }
+
+        public Task MarkOrderAsRead(string orderId, string askerId)
+        {
+            return Task.Run(() => _orderQueries.MarkOrderAsRead(orderId, askerId));
+        }
+
+        public Task<List<Order>> GetOrders(DateTime upperBoundDate, int ordersQuantity, string senderId)
+        {
+            return Task.Run( () => _orderQueries.GetOrders(upperBoundDate, ordersQuantity, senderId));
+        }
+
+        public Task<List<Order>> PullNewOrdersMetadataForSender(DateTime lowerBoundDate, int ordersQuantity, string senderId)
+        {
+            return Task.Run(() => _orderQueries.GetOrdersFromDateUp(lowerBoundDate, ordersQuantity, senderId));
+        }
+
+        public Task<Order> GetOrder(string orderId)
+        {
+            return Task.Run( () => _orderQueries.GetOrder(orderId) );
+        }
     }
 }

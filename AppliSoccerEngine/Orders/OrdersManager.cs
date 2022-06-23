@@ -1,5 +1,6 @@
 ﻿using AppliSoccerDatabasing;
 using AppliSoccerObjects.Modeling;
+using AppliSoccerObjects.TeamMemberHelper;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -26,6 +27,8 @@ namespace AppliSoccerEngine.Orders
             try
             {
                 _logger.Info("Order is valid. Trying to save in database...");
+                List<string> receiverIds = await ExtractReceiverIdsOfOrder(order);
+                order.MemberIdsReceivers = receiverIds;
                 String orderId = await _dataBaseAPI.InsertOrder(order);
                 if (orderId == null)
                 {
@@ -34,8 +37,7 @@ namespace AppliSoccerEngine.Orders
                 }
                 _logger.Info("Saving order has succeed");
                 order.ID = orderId;
-                List<OrderReceiving> orderReceivings = await CreateOrderReceivingList(order);
-                
+                List<OrderReceiving> orderReceivings = CreateOrderReceivings(receiverIds, order);
                 _logger.Info("Trying to insert the OrderReceiving list to database");
                 await _dataBaseAPI.InsertOrderReceivings(orderReceivings);
             }
@@ -51,15 +53,25 @@ namespace AppliSoccerEngine.Orders
             return true;
         }
 
+        public async Task<SentOrderWithReceiversInfo> GetOrder(string orderId)
+        {
+            Order order = await _dataBaseAPI.GetOrder(orderId);
+            return new SentOrderWithReceiversInfo
+            {
+                Order = order,
+                ReceiverInfos = await ExtractReceiversInfosOfOrder(order)
+            };
+        }
+
         public Task<List<Order>> GetOrders(string receiverId, DateTime fromTime, DateTime endTime)
         {
             _logger.Info("Trying get orders from database...");
             return _dataBaseAPI.GetOrders(receiverId, fromTime, endTime);
         }
 
-        private async Task<List<OrderReceiving>> CreateOrderReceivingList(Order order)
+
+        private async Task<List<string>> ExtractReceiverIdsOfOrder(Order order)
         {
-            _logger.Info("Trying to update orderPerReceiver");
             HashSet<String> receiversIds = new HashSet<String>();
             // Iterate through role that the order should go to and fetch all members under that role
             List<TeamMember> allTeamMembers = await _dataBaseAPI.GetTeamMembers(order.TeamId);
@@ -74,17 +86,70 @@ namespace AppliSoccerEngine.Orders
             {
                 receiversIds.Add(receiverId);
             }
-
-            // For each member of recievers, create orderReceiving and update the DB
-            List<OrderReceiving> orderReceivings = CreateOrderReceivings(receiversIds, order);
-            if (_logger.IsDebugEnabled)
-            {
-                _logger.Debug("Order Receiving list: " + JsonConvert.SerializeObject(orderReceivings));
-            }
-            return orderReceivings;
+            return receiversIds.ToList();
+        }
+        public async Task<List<OrderMetadata>> FetchOrdersMetadata(DateTime upperBoundDate, int ordersQuantity, string receiverId)
+        {
+            // Fetch from db
+            List<OrderReceiving> orderReceivings = await _dataBaseAPI.FetchOrdersMetadata(upperBoundDate, ordersQuantity, receiverId);
+            return orderReceivings
+                .ConvertAll<OrderMetadata>(or => ConvertOrderReceivingToMetadata(or)) 
+                .ToList<OrderMetadata>();
         }
 
-        private List<OrderReceiving> CreateOrderReceivings(HashSet<string> receiversIds, Order order)
+        private OrderMetadata ConvertOrderReceivingToMetadata(OrderReceiving or)
+        {
+            // Get Sender Data
+            var senderMember = _dataBaseAPI.GetUser(or.Order.SenderId).Result.TeamMember;
+            // Get his full name
+            var fullName = MemberFullNameGenerator.Generate(senderMember);
+            return new OrderMetadata
+            {
+                OrderId = or.Order.ID,
+                SenderName = fullName,
+                SentDate = or.Order.SendingDate,
+                Title = or.Order.Title,
+                WasRead = or.WasRead
+            };
+        }
+
+        private async Task <OrderMetadata> ConvertOrderToMetadata(Order or)
+        {
+            List<ReceiverInfo> recieverInfos = await ExtractReceiversInfosOfOrder(or);
+            return new OrderMetadata
+            {
+                OrderId = or.ID,
+                SentDate = or.SendingDate,
+                Title = or.Title,
+                ReceiversNames = recieverInfos.Select(info => info.Name).ToList(),
+                RolesReceivers = or.RolesReceivers
+            };
+        }
+
+        private async Task<List<ReceiverInfo>> ExtractReceiversInfosOfOrder(Order or)
+        {
+            List<string> receiversId = await ExtractReceiverIdsOfOrder(or);
+            List<ReceiverInfo> receiverInfos = new List<ReceiverInfo>();
+            foreach (var receiverId in receiversId)
+            {
+                var teamMember = _dataBaseAPI.GetTeamMember(receiverId).Result;
+                var name = MemberFullNameGenerator.Generate(teamMember);
+                var read = ( or.MembersIdsAlreadyRead.Contains(receiverId) );
+                receiverInfos.Add(new ReceiverInfo { Name = name, Read = read});
+            }
+            return receiverInfos;
+        }
+
+        public async Task<List<OrderMetadata>> PullNewOrdersMetadata(DateTime lowerBoundDate, int ordersQuantity, string receiverId)
+        {
+            // Fetch from db
+            List<OrderReceiving> orderReceivings = await _dataBaseAPI.PullNewOrdersMetadata(lowerBoundDate, ordersQuantity, receiverId);
+            return orderReceivings
+                .ConvertAll<OrderMetadata>(or => ConvertOrderReceivingToMetadata(or))
+                .ToList<OrderMetadata>();
+        }
+
+        private List<OrderReceiving> CreateOrderReceivings(List<string> receiversIds, Order order)
         {
             List<OrderReceiving> result = new List<OrderReceiving>();
             foreach (var recieverId in receiversIds)
@@ -92,6 +157,72 @@ namespace AppliSoccerEngine.Orders
                 result.Add( new OrderReceiving() { ReceiverId = recieverId, Order = order, WasRead = false } );
             }
             return result;
+        }
+
+        public async Task<OrderPayload> GetOrder(string orderId, string askerId)
+        {
+            Order order =  await _dataBaseAPI.GetOrder(orderId, askerId);
+            if(order == null)
+            {
+                _logger.Warn($"Order of id: ${orderId} is null");
+                return null;
+            }
+            MarkOrderAsRead(orderId, askerId);
+            return await CreateOrderPayload(order);
+        }
+
+        private void MarkOrderAsRead(string orderId, string askerId)
+        {
+            _dataBaseAPI.MarkOrderAsRead(orderId, askerId);
+        }
+
+        private async  Task<OrderPayload> CreateOrderPayload(Order order)
+        {
+            List<string> receiversIds = await ExtractReceiverIdsOfOrder(order);
+            List<string> receiversNames =
+                receiversIds.ToList()
+                .Select(id => _dataBaseAPI.GetUser(id).Result.TeamMember)
+                .Where(member => member != null)
+                .Select(member => MemberFullNameGenerator.Generate(member))
+                .ToList();
+            return new OrderPayload
+            {
+                Content = order.Content,
+                GameID = order.GameId,
+                ReceiversNames = receiversNames,
+                SenderName = MemberFullNameGenerator.Generate(await _dataBaseAPI.GetTeamMember(order.SenderId)),
+                SendingDate = order.SendingDate,
+                Title = order.Title
+            };
+        }
+
+        public async Task<List<OrderMetadata>> FetchOrdersMetadataForSender(DateTime upperBoundDate, int ordersQuantity, string senderId)
+        {
+            // Get orders from DB
+            List<Order> orders = await _dataBaseAPI.GetOrders(upperBoundDate, ordersQuantity, senderId);
+            // Extract metadata
+            // output
+            List<OrderMetadata> output = await ExtractOrderMetadataList(orders);
+            return output;
+        }
+
+        public async Task<List<OrderMetadata>> PullNewOrdersMetadataForSender(DateTime lowerBoundDate, int ordersQuantity, string senderId)
+        {
+            // Fetch from db
+            List<Order> orderList = await _dataBaseAPI.PullNewOrdersMetadataForSender(lowerBoundDate, ordersQuantity, senderId);
+            return orderList
+                .ConvertAll<OrderMetadata>(or =>  ConvertOrderToMetadata(or).Result)
+                .ToList();
+        }
+
+        private async Task<List<OrderMetadata>> ExtractOrderMetadataList(List<Order> orders)
+        {
+            List<OrderMetadata> output = new List<OrderMetadata>();
+            foreach (var order in orders)
+            {
+                output.Add(await ConvertOrderToMetadata(order));
+            }
+            return output;
         }
 
         private bool IsPlayerWithRole(TeamMember member, Role role)

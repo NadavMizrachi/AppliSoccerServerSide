@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppliSoccerDatabasing", "Ap
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppliSoccerEngine", "AppliSoccerEngine\AppliSoccerEngine.csproj", "{52FD9EDB-E40E-4A35-B28C-C34CFB7449DD}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tester", "Tester\Tester.csproj", "{96CF5085-D780-49DC-A90F-3FDA7386E343}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppliSoccerRestAPI", "AppliSoccerRestAPI\AppliSoccerRestAPI.csproj", "{61030054-81D9-49AF-B45B-03BDAD35C6E7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AppliSoccerStatisticAPI", "AppliSoccerStatisticAPI\AppliSoccerStatisticAPI.csproj", "{08DC812D-7588-44D9-88B0-CDD2A836F675}"
@@ -35,10 +33,6 @@ Global
 		{52FD9EDB-E40E-4A35-B28C-C34CFB7449DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52FD9EDB-E40E-4A35-B28C-C34CFB7449DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52FD9EDB-E40E-4A35-B28C-C34CFB7449DD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{96CF5085-D780-49DC-A90F-3FDA7386E343}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{96CF5085-D780-49DC-A90F-3FDA7386E343}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{96CF5085-D780-49DC-A90F-3FDA7386E343}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{96CF5085-D780-49DC-A90F-3FDA7386E343}.Release|Any CPU.Build.0 = Release|Any CPU
 		{61030054-81D9-49AF-B45B-03BDAD35C6E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{61030054-81D9-49AF-B45B-03BDAD35C6E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{61030054-81D9-49AF-B45B-03BDAD35C6E7}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -79,6 +79,16 @@ namespace AppliSoccerDatabasing
             return output;
         }
 
+        public static List<OrderReceiving> ConvertOrderReceivingList(List<OrderReceivingDBModel> orderReceivings)
+        {
+            List<OrderReceiving> output = new List<OrderReceiving>();
+            foreach (var orderReceiving in orderReceivings)
+            {
+                output.Add(ConvertOrderReceiving(orderReceiving));
+            }
+            return output;
+        }
+
         public static OrderReceivingDBModel ConvertOrderReceiving(OrderReceiving orderReceiving)
         {
             return new OrderReceivingDBModel()
@@ -101,6 +111,10 @@ namespace AppliSoccerDatabasing
 
         public static User ConvertUser(UserDBModel userDBModel)
         {
+            if(userDBModel == null)
+            {
+                return null;
+            }
             return new User()
             {
                 Username = userDBModel.UserName,
@@ -312,6 +326,7 @@ namespace AppliSoccerDatabasing
         {
             return new OrderDBModel()
             {
+                Id = order.ID,
                 Content = order.Content,
                 GameId = order.GameId,
                 MemberIdsReceivers = order.MemberIdsReceivers,

@@ -38,15 +38,38 @@ namespace AppliSoccerRestAPI.Controllers
                 return isSuccess;
             }catch(Exception ex)
             {
-                _logger.LogError("Creating order has encountered error", ex.Message);
+                _logger.LogError(ex, "Creating order has encountered error");
                 return false;
             }
         }
 
         [HttpGet]
+        public async Task<SentOrderWithReceiversInfo> GetSentOrder(string orderId)
+        {
+            _logger.LogInformation($"Got request for GetOrder. Order Id : {orderId}");
+            try
+            {
+                SentOrderWithReceiversInfo sentOrder = await _ordersManager.GetOrder(orderId);
+                if(sentOrder != null)
+                {
+                    _logger.LogInformation("Gor order successfully!");
+                    if (_logger.IsEnabled(LogLevel.Debug))
+                    {
+                        _logger.LogDebug($"Order that fetched from DB: {JsonConvert.SerializeObject(sentOrder)}");
+                    }
+                    return sentOrder;
+                }
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, "Got order has failed");
+            }
+            return null;
+        }
+
+        [HttpGet]
         public async Task<List<Order>> GetOrders(string receiverId, DateTime fromTime, DateTime endTime)
         {
-            _logger.LogInformation($"Got request for GetOrders. Parameters: receiverId: ${receiverId} fromTime:${fromTime.ToString()}" +
+            _logger.LogInformation($"Got request for GetOrders. Parameters: receiverId: {receiverId} fromTime: {fromTime}" +
                 $"endTime:${endTime.ToString()}");
             try
             {
@@ -56,15 +79,152 @@ namespace AppliSoccerRestAPI.Controllers
                     _logger.LogInformation("GotOrders has succeed!");
                     if (_logger.IsEnabled(LogLevel.Debug))
                     {
-                        _logger.LogDebug($"Orders that fetched from DB: ${JsonConvert.SerializeObject(orders).ToString()}");
+                        _logger.LogDebug($"Orders that fetched from DB: {JsonConvert.SerializeObject(orders)}");
                     }
                     return orders;
                 }
             }catch(Exception ex)
             {
-                _logger.LogError("Exception has occurred while trying get orders.", ex);
+                _logger.LogError(ex, "Exception has occurred while trying get orders.");
             }
             _logger.LogInformation("GetOrders has failed");
+            return null;
+        }
+
+        [HttpGet]
+        public async Task<List<OrderMetadata>> FetchOrdersMetadata(DateTime upperBoundDate, int ordersQuantity, String receiverId)
+        {
+            _logger.LogInformation($"Got request of FetchOrdersMetadata for receiver ID: ${receiverId}");
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                _logger.LogDebug($"Upper Date: ${upperBoundDate}. Orders quantity: ${ordersQuantity}");
+            }
+            try
+            {
+                List<OrderMetadata> output = await _ordersManager.FetchOrdersMetadata(upperBoundDate, ordersQuantity, receiverId);
+                if(output != null)
+                {
+                    if (_logger.IsEnabled(LogLevel.Debug))
+                    {
+                        _logger.LogDebug($"Fetched ${output.Count} orders metadata: ${JsonConvert.SerializeObject(output)}");
+                    }
+                    _logger.LogInformation($"Fetched successfully ${output.Count} orders metadata.");
+                    return output;
+                }
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error has occurred durring trying fetch order metadata");
+            }
+            return null;
+        }
+
+        [HttpGet]
+        public async Task<List<OrderMetadata>> PullNewOrdersMetadata(DateTime lowerBoundDate, int ordersQuantity, String receiverId)
+        {
+            _logger.LogInformation($"Got request of PullNewOrdersMetadata for receiver ID: ${receiverId}");
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                _logger.LogDebug($"Lower Date: ${lowerBoundDate}. Orders quantity: ${ordersQuantity}");
+            }
+            try
+            {
+                List<OrderMetadata> output = await _ordersManager.PullNewOrdersMetadata(lowerBoundDate, ordersQuantity, receiverId);
+                if(output != null)
+                {
+                    if (_logger.IsEnabled(LogLevel.Debug))
+                    {
+                        _logger.LogDebug($"Fetched ${output.Count} orders metadata: ${JsonConvert.SerializeObject(output)}");
+                    }
+                    _logger.LogInformation($"Fetched successfully ${output.Count} orders metadata.");
+                    return output;
+                }
+            }catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error has occurred durring trying fetch order metadata");
+            }
+            return null;
+        }
+
+
+        [HttpGet]
+        public async Task<OrderPayload> GetOrderPayload(string orderId, string askerId)
+        {
+            _logger.LogInformation($"Got request for GotOrder. Order Id : ${orderId}. asker ID ${askerId}");
+            try
+            {
+                OrderPayload orderPayload = await _ordersManager.GetOrder(orderId, askerId);
+                if(orderPayload == null)
+                {
+                    _logger.LogInformation("Order is null");
+                    return null;
+                }
+                if (_logger.IsEnabled(LogLevel.Debug))
+                {
+                    _logger.LogDebug($"order details: ${JsonConvert.SerializeObject(orderPayload)}");
+                }
+                return orderPayload;
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"Error has occured while trying to get orderId ${orderId}");
+            }
+            return null;
+        }
+        
+
+        [HttpGet]
+        public async Task<List<OrderMetadata>> FetchOrdersMetadataForSender(DateTime upperBoundDate, int ordersQuantity, String senderId)
+        {
+            _logger.LogInformation($"Got request of FetchOrdersMetadataForSender . Sender ID: ${senderId}");
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                _logger.LogDebug($"Upper Date: ${upperBoundDate}. Orders quantity: ${ordersQuantity}");
+            }
+            try
+            {
+                List<OrderMetadata> output = await _ordersManager.FetchOrdersMetadataForSender(upperBoundDate, ordersQuantity, senderId);
+                if (output != null)
+                {
+                    if (_logger.IsEnabled(LogLevel.Debug))
+                    {
+                        _logger.LogDebug($"Fetched ${output.Count} orders metadata: ${JsonConvert.SerializeObject(output)}");
+                    }
+                    _logger.LogInformation($"Fetched successfully ${output.Count} orders metadata.");
+                    return output;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error has occurred durring trying fetch order metadata for sender");
+            }
+            return null;
+        }
+
+        [HttpGet]
+        public async Task<List<OrderMetadata>> PullNewOrdersMetadataForSender(DateTime lowerBoundDate, int ordersQuantity, String senderId)
+        {
+            _logger.LogInformation($"Got request of PullNewOrdersMetadataForSender for sender ID: ${senderId}");
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                _logger.LogDebug($"Lower Date: ${lowerBoundDate}. Orders quantity: ${ordersQuantity}");
+            }
+            try
+            {
+                List<OrderMetadata> output = await _ordersManager.PullNewOrdersMetadataForSender(lowerBoundDate, ordersQuantity, senderId);
+                if (output != null)
+                {
+                    if (_logger.IsEnabled(LogLevel.Debug))
+                    {
+                        _logger.LogDebug($"Fetched ${output.Count} orders metadata: ${JsonConvert.SerializeObject(output)}");
+                    }
+                    _logger.LogInformation($"Fetched successfully ${output.Count} orders metadata.");
+                    return output;
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error has occurred durring trying fetch order metadata");
+            }
             return null;
         }
     }
