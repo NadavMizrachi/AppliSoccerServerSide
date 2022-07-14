@@ -1,9 +1,11 @@
 ﻿using AppliSoccerDatabasing.DBModels;
+using AppliSoccerObjects.ActionResults.EventsActions;
 using AppliSoccerObjects.Modeling;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace AppliSoccerDatabasing
 {
@@ -12,9 +14,165 @@ namespace AppliSoccerDatabasing
         public static Team ConvertTeam(TeamDBModel teamDBModel)
         {
             Team team = new Team(teamDBModel.CountryName, teamDBModel.Name);
-            team.LeagueName = teamDBModel.LeagueName;
+            team.ExtMainLeagueId = teamDBModel.LeagueName;
             team.IsRegistered = teamDBModel.IsRegistred;
+            team.ExtMainLeagueId = teamDBModel.ExtMainLeagueId;
+            team.ExtSeconderyCompetitionsIds = teamDBModel.ExtSeconderyCompetitionsIds;
+            team.ExtTeamId = teamDBModel.ExtTeamId;
+            team.LogoUrl = teamDBModel.LogoUrl;
             return team;
+        }
+
+        public static List<LeagueDBModel> ConvertLeagues(List<League> leagues)
+        {
+            List<LeagueDBModel> output = new List<LeagueDBModel>();
+            foreach (var league in leagues)
+            {
+                output.Add(ConvertLeague(league));
+            }
+            return output;
+        }
+
+        public static LeagueDBModel ConvertLeague(League league)
+        {
+            if (league == null) return null;
+
+            return new LeagueDBModel
+            {
+                Country = league.Country,
+                Id = league.ID,
+                LogoUrl = league.LogoUrl,
+                Name = league.Name,
+                Table = ConvertLeagueTable(league.Table)
+            };
+        }
+
+        public static League ConvertLeague(LeagueDBModel league)
+        {
+            if (league == null) return null;
+
+            return new League
+            {
+                Country = league.Country,
+                ID = league.Id,
+                LogoUrl = league.LogoUrl,
+                Name = league.Name,
+                Table = ConvertLeagueTable(league.Table)
+            };
+        }
+
+        public static LeagueTableDBModel ConvertLeagueTable(LeagueTable table)
+        {
+            if (table == null) return null;
+            return new LeagueTableDBModel
+            {
+                SubTables = ConvertSubTables(table.SubTables)
+            };
+        }
+
+        public static LeagueTable ConvertLeagueTable(LeagueTableDBModel table)
+        {
+            if (table == null) return null;
+            return new LeagueTable
+            {
+                SubTables = ConvertSubTables(table.SubTables)
+            };
+        }
+
+        private static List<SubTableDBModel> ConvertSubTables(List<SubTable> subTables)
+        {
+            if (subTables == null) return null;
+            List<SubTableDBModel> subTablesModels = new List<SubTableDBModel>();
+            foreach (var subTable in subTables)
+            {
+                subTablesModels.Add(ConvertSubTable(subTable));
+            }
+            return subTablesModels;
+        }
+
+        private static List<SubTable> ConvertSubTables(List<SubTableDBModel> subTables)
+        {
+            if (subTables == null) return null;
+            List<SubTable> subTablesModels = new List<SubTable>();
+            foreach (var subTable in subTables)
+            {
+                subTablesModels.Add(ConvertSubTable(subTable));
+            }
+            return subTablesModels;
+        }
+
+        private static SubTableDBModel ConvertSubTable(SubTable subTable)
+        {
+            if (subTable == null) return null;
+            return new SubTableDBModel
+            {
+                Description = subTable.Description,
+                Name = subTable.Name,
+                Rows = ConvertTableRows(subTable.Rows)
+            };
+        }
+
+        private static SubTable ConvertSubTable(SubTableDBModel subTable)
+        {
+            if (subTable == null) return null;
+            return new SubTable
+            {
+                Description = subTable.Description,
+                Name = subTable.Name,
+                Rows = ConvertTableRows(subTable.Rows)
+            };
+        }
+
+        private static List<TableRowDBModel> ConvertTableRows(List<TableRow> rows)
+        {
+            if(rows == null) return null;
+            List<TableRowDBModel> output = new List<TableRowDBModel>();
+            foreach (var row in rows)
+            {
+                output.Add(ConvertTableRow(row));
+            }
+            return output;
+        }
+
+        private static List<TableRow> ConvertTableRows(List<TableRowDBModel> rows)
+        {
+            if (rows == null) return null;
+            List<TableRow> output = new List<TableRow>();
+            foreach (var row in rows)
+            {
+                output.Add(ConvertTableRow(row));
+            }
+            return output;
+        }
+
+        private static TableRowDBModel ConvertTableRow(TableRow row)
+        {
+            if( row == null) return null;
+            return new TableRowDBModel
+            {
+                Form = row.Form,
+                GoalsDiff = row.GoalsDiff,
+                Points = row.Points,
+                Rank = row.Rank,
+                TeamId = row.TeamId,
+                TeamName = row.TeamName,
+                TeamLogoUrl = row.LogoURL
+            };
+        }
+
+        private static TableRow ConvertTableRow(TableRowDBModel row)
+        {
+            if (row == null) return null;
+            return new TableRow
+            {
+                Form = row.Form,
+                GoalsDiff = row.GoalsDiff,
+                Points = row.Points,
+                Rank = row.Rank,
+                TeamId = row.TeamId,
+                TeamName = row.TeamName,
+                LogoURL = row.TeamLogoUrl
+            };
         }
 
         public static TeamDBModel ConvertTeam(Team team)
@@ -23,11 +181,153 @@ namespace AppliSoccerDatabasing
             {
                 Id = team.Id,
                 Name = team.Name,
+                LogoUrl = team.LogoUrl,
                 CountryName = team.CountryName,
-                LeagueName = team.LeagueName,
-                IsRegistred = team.IsRegistered
+                LeagueName = team.ExtMainLeagueId,
+                IsRegistred = team.IsRegistered,
+                ExtTeamId = team.ExtTeamId,
+                ExtMainLeagueId = team.ExtMainLeagueId,
+                ExtSeconderyCompetitionsIds = team.ExtSeconderyCompetitionsIds
             };
         }
+
+        public static EventDetailsDBModel ConvertEvent(EventDetails eventDetails)
+        {
+            if (eventDetails == null) return null;
+
+            return new EventDetailsDBModel
+            {
+                AdditionalInfo = eventDetails.AdditionalInfo,
+                Title = eventDetails.Title,
+                CreatorId = eventDetails.CreatorId,
+                Description = eventDetails.Description,
+                EndTime = eventDetails.EndTime,
+                ParticipantsIds = eventDetails.ParticipantsIds,
+                ParticipantsRoles = eventDetails.ParticipantsRoles?.Select(dbRoleEnum => ConvertRoleEnum(dbRoleEnum)).ToList(),
+                Place = ConvertPlace(eventDetails.Place),
+                StartTime = eventDetails.StartTime,
+                TeamId = eventDetails.TeamId,
+                Type = ConvertEventType(eventDetails.Type)
+            };
+        }
+
+        public static EventDetails ConvertEvent(EventDetailsDBModel eventDetailsModel)
+        {
+            if (eventDetailsModel == null) return null;
+
+            return new EventDetails
+            {
+                Id = eventDetailsModel.Id,
+                Title = eventDetailsModel.Title,
+                AdditionalInfo = eventDetailsModel.AdditionalInfo,
+                CreatorId = eventDetailsModel.CreatorId,
+                Description = eventDetailsModel.Description,
+                EndTime = eventDetailsModel.EndTime,
+                ParticipantsIds = eventDetailsModel.ParticipantsIds,
+                ParticipantsRoles = eventDetailsModel.ParticipantsRoles?.Select(dbRoleEnum => ConvertRoleEnum(dbRoleEnum)).ToList(),
+                Place = ConvertPlace(eventDetailsModel.Place),
+                StartTime = eventDetailsModel.StartTime,
+                TeamId = eventDetailsModel.TeamId,
+                Type = ConvertEventType(eventDetailsModel.Type)
+            };
+        }
+
+        private static DBEnums.EventType ConvertEventType(EventType type)
+        {
+            switch (type)
+            {
+                case EventType.Game:
+                    return DBEnums.EventType.Game;
+                case EventType.Training:
+                    return DBEnums.EventType.Training;
+                case EventType.Volunteering:
+                    return DBEnums.EventType.Volunteering;
+                case EventType.Forging:
+                    return DBEnums.EventType.Forging;
+                case EventType.Medicine:
+                    return DBEnums.EventType.Medicine;
+                case EventType.Other:
+                    return DBEnums.EventType.Other;
+                default:
+                    return DBEnums.EventType.Other;
+            }
+        }
+
+        private static EventType ConvertEventType(DBEnums.EventType type)
+        {
+            switch (type)
+            {
+                case DBEnums.EventType.Game:
+                    return EventType.Game;
+                case DBEnums.EventType.Training:
+                    return EventType.Training;
+                case DBEnums.EventType.Volunteering:
+                    return EventType.Volunteering;
+                case DBEnums.EventType.Forging:
+                    return EventType.Forging;
+                case DBEnums.EventType.Medicine:
+                    return EventType.Medicine;
+                case DBEnums.EventType.Other:
+                    return EventType.Other;
+                default:
+                    return EventType.Other;
+            }
+        }
+
+        public static List<EventDetails> ConvertEvents(List<EventDetailsDBModel> eventModels)
+        {
+            List<EventDetails> outputList = new List<EventDetails>();
+            if (eventModels == null) return outputList;
+            eventModels.ForEach(model => outputList.Add(ConvertEvent(model)));
+            return outputList;
+        }
+
+        private static PlaceDBModel ConvertPlace(Place place)
+        {
+            if (place == null) return null;
+
+            return new PlaceDBModel
+            {
+                Description = place.Description,
+                Name = place.Name,
+                Position = ConvertPoistion(place.Position)
+            };
+        }
+
+        private static Place ConvertPlace(PlaceDBModel placeModel)
+        {
+            if (placeModel == null) return null;
+
+            return new Place
+            {
+                Description = placeModel.Description,
+                Name = placeModel.Name,
+                Position = ConvertPoistion(placeModel.Position)
+            };
+        }
+
+        private static PositionDBModel ConvertPoistion(Position position)
+        {
+            if (position == null) return null;
+
+            return new PositionDBModel
+            {
+                Latitude = position.Latitude,
+                Longitude = position.Longitude
+            };
+        }
+
+        private static Position ConvertPoistion(PositionDBModel positionModel)
+        {
+            if (positionModel == null) return null;
+
+            return new Position
+            {
+                Latitude = positionModel.Latitude,
+                Longitude = positionModel.Longitude
+            };
+        }
+
         public static List<Team> ConvertTeams(List<TeamDBModel> teamDBModels)
         {
             List<Team> teams = new List<Team>();

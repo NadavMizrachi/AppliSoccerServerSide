@@ -19,5 +19,8 @@ namespace AppliSoccerStatisticAPI.ExternalAPISource.API_Football.APIModels
 
         [JsonProperty("founded")]
         public int? FoundedYear { get; set; }
+        
+        [JsonProperty("logo")]
+        public string LogoUrl { get; set; }
     }
 }

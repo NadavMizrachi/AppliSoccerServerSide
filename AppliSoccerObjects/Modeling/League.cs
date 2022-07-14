@@ -6,8 +6,10 @@ namespace AppliSoccerObjects.Modeling
 {
     public class League
     {
-        public String ID { get; set; }
-        public String Name { get; set; }
-        public List<string> Teams{ get; set; }
+        public string ID { get; set; }
+        public string LogoUrl { get; set; }
+        public string Country { get; set; }
+        public string Name { get; set; }
+        public LeagueTable Table { get; set; }
     }
 }

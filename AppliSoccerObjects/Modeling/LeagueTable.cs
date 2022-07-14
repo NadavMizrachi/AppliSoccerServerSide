@@ -6,7 +6,6 @@ namespace AppliSoccerObjects.Modeling
 {
     public class LeagueTable
     {
-        public League League { get; set; }
-        public List<TableRow> Rows { get; set; }
+        public List<SubTable> SubTables { get; set; }
     }
 }

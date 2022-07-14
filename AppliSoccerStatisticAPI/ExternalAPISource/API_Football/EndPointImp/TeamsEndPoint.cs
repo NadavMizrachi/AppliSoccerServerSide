@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
+
 namespace AppliSoccerStatisticAPI.ExternalAPISource.API_Football.EndPointImp
 {
     public class TeamsEndPoint : EndPoint

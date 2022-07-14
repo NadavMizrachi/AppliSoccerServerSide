@@ -13,6 +13,8 @@ namespace AppliSoccerDatabasing.mongo
         private const string _usersCollection = "users";
         private const string _ordersCollection = "orders";
         private const string _orderReceivingCollection = "orderReceiving";
+        private const string _eventsCollection = "events";
+        private const string _leaguesCollection = "leagues";
 
         private IMongoCollection<T> GetCollection<T>(string collectionName)
         {
@@ -30,6 +32,11 @@ namespace AppliSoccerDatabasing.mongo
             return GetCollection<UserDBModel>(_usersCollection);
         }
 
+        internal IMongoCollection<EventDetailsDBModel> GetEventsCollection()
+        {
+            return GetCollection<EventDetailsDBModel>(_eventsCollection);
+        }
+
         public IMongoCollection<OrderDBModel> GetOrdersCollection()
         {
             return GetCollection<OrderDBModel>(_ordersCollection);
@@ -38,6 +45,11 @@ namespace AppliSoccerDatabasing.mongo
         public IMongoCollection<OrderReceivingDBModel> GetOrderReceivingCollection()
         {
             return GetCollection<OrderReceivingDBModel>(_orderReceivingCollection);
+        }
+
+        public IMongoCollection<LeagueDBModel> GetLeaguesVollection()
+        {
+            return GetCollection<LeagueDBModel>(_leaguesCollection);
         }
     }
 }

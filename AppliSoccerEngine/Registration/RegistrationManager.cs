@@ -14,21 +14,18 @@ namespace AppliSoccerEngine.Registration
     public class RegistrationManager
     {
         private static readonly log4net.ILog _logger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private IDataBaseAPI _dataBaseAPI = Database.GetDatabase();
-        private IStatisticAPI _statisticAPI = ExternalStatisticSource.GetStatisticAPI();
+        private static IDataBaseAPI _dataBaseAPI = Database.GetDatabase();
+        private static IStatisticAPI _statisticAPI = ExternalStatisticSource.GetStatisticAPI();
         private readonly Object _locker = new object();
 
         public RegistrationManager()
         {
-            PullTeamsToDatabase();
+            //PullTeamsToDatabase();
         }
 
-        private void PullTeamsToDatabase()
+        public static void PullTeamsToDatabase()
         {
-            if (MyConfiguration.GetBoolFromAppSetting("pullTeams"))
-            {
-                PullTeamsAsync(SupportedCountries.GetCountries());
-            }
+            PullTeamsAsync(SupportedCountries.GetCountries());
         }
 
         /// <summary>
@@ -36,11 +33,12 @@ namespace AppliSoccerEngine.Registration
         /// be marked as un registered.
         /// </summary>
         /// <param name="countriesNames">List of countries that the teams will be pulled from.</param>
-        public void PullTeamsAsync(IEnumerable<string> countriesNames)
+        private static void PullTeamsAsync(IEnumerable<string> countriesNames)
         {
             var teamsFromAPIServer = _statisticAPI.GetTeamsTask(countriesNames);
             foreach (var team in teamsFromAPIServer.Result)
             {
+                // TODO - When team exist, we need update the detais (no return like implemented here)
                 bool teamAlreadyExist = _dataBaseAPI.IsTeamExistTask(team).Result;
                 if (teamAlreadyExist)
                 {

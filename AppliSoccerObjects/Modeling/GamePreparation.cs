@@ -7,7 +7,6 @@ namespace AppliSoccerObjects.Modeling
     public class GamePreparation
     {
         public String GeneralOrder { get; set; }
-        public GameEvent Game { get; set; }
         public List<Order> Orders { get; set; }
     }
 }

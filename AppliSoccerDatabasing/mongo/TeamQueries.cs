@@ -3,6 +3,7 @@ using AppliSoccerObjects.Modeling;
 using MongoDB.Driver;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -38,6 +39,17 @@ namespace AppliSoccerDatabasing.mongo
             });
         }
 
+        public Task<List<Team>> GetRegistredTeamsTask()
+        {
+            return Task.Run(() =>
+            {
+                List<TeamDBModel> objectsFromDB =
+                    _collection.Find(team => team.IsRegistred == true).ToList();
+                List<Team> result = DBModelConverter.ConvertTeams(objectsFromDB);
+                return result;
+            });
+        }
+
         public Task InsertTeamTask(Team team)
         {
             TeamDBModel teamDBModel = DBModelConverter.ConvertTeam(team);
@@ -63,5 +75,34 @@ namespace AppliSoccerDatabasing.mongo
             return _collection.UpdateOneAsync(filter, updateDef, options);
         }
 
+        public Task UpdateTeam(Team team)
+        {
+            string teamId = team.Id;
+            var filter = Builders<TeamDBModel>.Filter.Eq(team => team.Id, teamId);
+            var updateLeaguesIds =
+                Builders<TeamDBModel>.Update
+                .Set(team => team.ExtMainLeagueId, team.ExtMainLeagueId)
+                .Set(team => team.ExtSeconderyCompetitionsIds, team.ExtSeconderyCompetitionsIds);
+            var options = new UpdateOptions { IsUpsert = true };
+            return _collection.UpdateOneAsync(filter, updateLeaguesIds, options);
+        }
+
+        public string GetMainLeagueIdOfTeam(string teamId)
+        {
+            var team = _collection.Find(team => team.Id == teamId).ToList().First();
+            return team.ExtMainLeagueId;
+        }
+
+        public Team GetTeam(string teamId)
+        {
+            var team = _collection.Find(team => team.Id == teamId).ToList().First();
+            return DBModelConverter.ConvertTeam(team);
+        }
+
+        public Team GetTeamByExtId(string teamExtId)
+        {
+            var team = _collection.Find(team => team.ExtTeamId == teamExtId).ToList().First();
+            return DBModelConverter.ConvertTeam(team);
+        }
     }
 }

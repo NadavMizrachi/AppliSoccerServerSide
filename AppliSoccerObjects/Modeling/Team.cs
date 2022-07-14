@@ -9,7 +9,10 @@ namespace AppliSoccerObjects.Modeling
         public string Id { get; private set; }
         public string Name { get; set; }
         public string CountryName { get; set; }
-        public string LeagueName { get; set; }
+        public string ExtTeamId { get; set; }
+        public string ExtMainLeagueId { get; set; }
+        public string LogoUrl { get; set; }
+        public List<string> ExtSeconderyCompetitionsIds { get; set; }
         public bool IsRegistered { get; set; }
         public List<TeamMember> TeamMembers { get; set; }
         public User Admin { get; set; }

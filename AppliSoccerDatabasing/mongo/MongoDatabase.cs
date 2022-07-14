@@ -1,9 +1,6 @@
-﻿using AppliSoccerDatabasing.DBModels;
-using AppliSoccerObjects.Modeling;
-using MongoDB.Driver;
+﻿using AppliSoccerObjects.Modeling;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace AppliSoccerDatabasing.mongo
@@ -14,6 +11,8 @@ namespace AppliSoccerDatabasing.mongo
         private TeamQueries _teamQueries;
         private UserQueries _userQueries;
         private OrderQueries _orderQueries;
+        private EventQueries _eventQueries;
+        private LeagueQueries _leagueQueries;
         
         public MongoDatabase()
         {
@@ -21,6 +20,8 @@ namespace AppliSoccerDatabasing.mongo
             _teamQueries = new TeamQueries(_collectionAccess.GetTeamsCollection());
             _userQueries = new UserQueries(_collectionAccess.GetUserCollection());
             _orderQueries = new OrderQueries(_collectionAccess.GetOrdersCollection(), _collectionAccess.GetOrderReceivingCollection());
+            _eventQueries = new EventQueries(_collectionAccess.GetEventsCollection());
+            _leagueQueries = new LeagueQueries(_collectionAccess.GetLeaguesVollection());
         }
         public void CreateDatabase()
         {
@@ -46,6 +47,7 @@ namespace AppliSoccerDatabasing.mongo
         {
             return _teamQueries.GetUnregistredTeamsTask(country);
         }
+
 
         public Task InsertTeamTask(Team team)
         {
@@ -164,6 +166,67 @@ namespace AppliSoccerDatabasing.mongo
         public Task<Order> GetOrder(string orderId)
         {
             return Task.Run( () => _orderQueries.GetOrder(orderId) );
+        }
+
+        public Task<bool> IsExistOverlappingEvent(EventDetails eventDetails)
+        {
+            DateTime start = eventDetails.StartTime;
+            DateTime end = eventDetails.EndTime;
+            List<string> participantsIds = eventDetails.ParticipantsIds;
+
+            return _eventQueries.isExistEventForParticipantsBetweenDates(start, end, participantsIds);
+        }
+
+        public Task InsertEvent(EventDetails eventDetails)
+        {
+            return _eventQueries.InsertEvent(eventDetails);
+        }
+
+        public Task<List<EventDetails>> GetEvents(DateTime lowerBoundDate, DateTime upBoundDate, string askerId)
+        {
+            return _eventQueries.GetEvents(lowerBoundDate, upBoundDate, askerId);
+        }
+
+        public Task UpdateEvent(EventDetails edittedEvent)
+        {
+            return _eventQueries.UpdateEvent(edittedEvent);
+        }
+
+        public Task<List<Team>> GetRegisteredTeams()
+        {
+            return _teamQueries.GetRegistredTeamsTask();
+        }
+
+        public Task UpdateTeam(Team team)
+        {
+            return _teamQueries.UpdateTeam(team);
+        }
+
+        /* Update only details - NO TABLES RANKS . TABLES RANK WILL BE UPDATED IN SEPERATE ROUTINE -  */
+        public Task UpdateLeaguesDetails(List<League> leagues)
+        {
+            return _leagueQueries.UpdateLeaguesDetails(leagues);
+        }
+
+        public Task UpdateTableRanks(string leagueId, LeagueTable leagueTable)
+        {
+            return _leagueQueries.UpdateTableRanks(leagueId, leagueTable);
+        }
+
+        public Task<League> GetMainLeague(string teamId)
+        {
+            Team team = _teamQueries.GetTeam(teamId);
+            return _leagueQueries.GetMainLeague(team.ExtMainLeagueId);
+        }
+
+        public Team GetTeam(string teamId)
+        {
+            return _teamQueries.GetTeam(teamId);
+        }
+
+        public Team GetTeamByExtId(string teamExtId)
+        {
+            return _teamQueries.GetTeamByExtId(teamExtId);
         }
     }
 }

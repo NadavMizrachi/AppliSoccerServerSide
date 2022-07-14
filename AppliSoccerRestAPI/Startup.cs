@@ -1,3 +1,5 @@
+using AppliSoccerEngine;
+using AppliSoccerEngine.Registration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -48,6 +50,9 @@ namespace AppliSoccerRestAPI
             {
                 endpoints.MapControllers();
             });
+
+            // My start up logic :
+            StartUpManager.MakeStartUpInits();
         }
     }
 }

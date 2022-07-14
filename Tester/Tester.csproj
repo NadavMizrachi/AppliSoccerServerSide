@@ -6,7 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\AppliSoccerObjects\AppliSoccerObjects.csproj" />
     <ProjectReference Include="..\AppliSoccerStatisticAPI\AppliSoccerStatisticAPI.csproj" />
   </ItemGroup>
 

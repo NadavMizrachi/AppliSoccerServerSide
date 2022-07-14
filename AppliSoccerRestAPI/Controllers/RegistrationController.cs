@@ -48,6 +48,8 @@ namespace AppliSoccerRestAPI.Controllers
             return country;
         }
 
+
+        // TODO - when register team, pull it's league table!
         [HttpPost]
         public TeamMember RegisterTeam([FromQuery] string teamId,
             [FromQuery] string username,

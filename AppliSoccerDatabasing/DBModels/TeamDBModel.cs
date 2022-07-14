@@ -13,16 +13,9 @@ namespace AppliSoccerDatabasing.DBModels
         public string CountryName { get; set; }
         public string LeagueName { get; set; }
         public bool IsRegistred { get; set; }
-
-        /**
-         * public string Id { get; private set; }
-        public string Name { get; set; }
-        public string CountryName { get; set; }
-        public string LeagueName { get; set; }
-        public bool IsRegistered { get; set; }
-        public List<Player> Players { get; set; }
-        public List<Staff> StaffMembers{ get; set; }
-        public User Admin { get; set; }
-         */
+        public string LogoUrl { get; set; }
+        public string ExtMainLeagueId { get; set; }
+        public string ExtTeamId { get; set; }
+        public List<string> ExtSeconderyCompetitionsIds { get; set; }
     }
 }
