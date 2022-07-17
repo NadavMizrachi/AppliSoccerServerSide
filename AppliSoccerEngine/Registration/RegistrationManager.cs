@@ -72,7 +72,14 @@ namespace AppliSoccerEngine.Registration
                 List<TeamDetails> teamDetailList = new List<TeamDetails>();
                 foreach (var team in teams)
                 {
-                    teamDetailList.Add(new TeamDetails() { Id = team.Id, Name = team.Name, CountryName = team.CountryName });
+                    teamDetailList.Add(
+                        new TeamDetails() {
+                            Id = team.Id,
+                            Name = team.Name, 
+                            CountryName = team.CountryName,
+                            LogoURL = team.LogoUrl
+                        }
+                    );
                 }
                 teamDetailList.Sort((obj1, obj2) => obj1.Name.CompareTo(obj2.Name));
                 return teamDetailList;

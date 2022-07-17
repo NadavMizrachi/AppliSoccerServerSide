@@ -9,5 +9,6 @@ namespace AppliSoccerObjects.Modeling
         public string Id { get; set; }
         public string Name { get; set; }
         public string CountryName { get; set; }
+        public string LogoURL { get; set; }
     }
 }
