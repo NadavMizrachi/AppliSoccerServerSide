@@ -1,0 +1,16 @@
+﻿How deploy the dll server:
+
+	cd to AppliSoccerServerRestApI/ dir
+
+execute:
+	 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 922577824254.dkr.ecr.us-east-1.amazonaws.com
+
+Then execute:
+	docker build -t applisoccer .
+
+Then execute  (provide version like 1.2) :
+	docker tag applisoccer 922577824254.dkr.ecr.us-east-1.amazonaws.com/applisoccer:<version>
+
+Then upload to aws repoistory
+
+	docker push 922577824254.dkr.ecr.us-east-1.amazonaws.com/applisoccer:<version>

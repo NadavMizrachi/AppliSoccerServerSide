@@ -28,6 +28,11 @@ namespace AppliSoccerEngine.Orders
             {
                 _logger.Info("Order is valid. Trying to save in database...");
                 List<string> receiverIds = await ExtractReceiverIdsOfOrder(order);
+                if(receiverIds == null || receiverIds.Count == 0)
+                {
+                    _logger.Info("There are no receivers for the order. Dows not saving the order");
+                    return false;
+                }
                 order.MemberIdsReceivers = receiverIds;
                 String orderId = await _dataBaseAPI.InsertOrder(order);
                 if (orderId == null)

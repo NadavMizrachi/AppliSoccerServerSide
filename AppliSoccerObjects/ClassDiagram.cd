@@ -1,142 +1,44 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
-  <Class Name="AppliSoccerObjects.Modeling.CalendarEvent" Collapsed="true">
-    <Position X="7.75" Y="3.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
-      <FileName>Modeling\CalendarEvent.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.Country" Collapsed="true">
-    <Position X="12.5" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAABAAAAAAAAAAAAAAAAQAAAAAAAAAQAAAAAAAAAA=</HashCode>
-      <FileName>Modeling\Country.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.EventDetails" Collapsed="true">
-    <Position X="14.25" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>ABAAAAAAAAAgAAAAAAAAAAAAAAAAAAABAEAAAAAAAAA=</HashCode>
-      <FileName>Modeling\EventDetails.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.GameEvent" Collapsed="true">
-    <Position X="7.75" Y="4.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAQAAAAAAAAA=</HashCode>
-      <FileName>Modeling\GameEvent.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.GamePreparation" Collapsed="true">
-    <Position X="16" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAEAAgAAAAAAAAAAAAAAAAAAAAgAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Modeling\GamePreparation.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.GameScore" Collapsed="true">
-    <Position X="17.75" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AEAAAACAAAAgAAAAAAAAAAAAAAAAAABAAAAAAAAAAAA=</HashCode>
-      <FileName>Modeling\GameScore.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.League" Collapsed="true">
-    <Position X="12.5" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAIAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Modeling\League.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.LeagueTable" Collapsed="true">
-    <Position X="14.25" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAACAAAAAAAA=</HashCode>
-      <FileName>Modeling\LeagueTable.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.MemberDetails" Collapsed="true">
-    <Position X="16" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAEAAAAAggAAAAAAAQAQBAAAAAAAAAAAAAAAAAAg=</HashCode>
-      <FileName>Modeling\MemberDetails.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.Order" Collapsed="true">
-    <Position X="17.75" Y="1.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AgAAAAAAAgAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAgAA=</HashCode>
-      <FileName>Modeling\Order.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.Place" Collapsed="true">
-    <Position X="12.5" Y="2.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Modeling\Place.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.Player" Collapsed="true">
-    <Position X="7.75" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAEEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Modeling\Player.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.Staff" Collapsed="true">
-    <Position X="10" Y="1.75" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAIAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Modeling\Staff.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.TableRow" Collapsed="true">
-    <Position X="14.25" Y="2.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAABAAAAAAAgAAAAAAAEAAAAAAAAAAAgAAAAAQAAAAA=</HashCode>
-      <FileName>Modeling\TableRow.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.TeamDetails" Collapsed="true">
-    <Position X="16" Y="2.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>ACAAAAAAAAAAAAAAAACAAAQAAAAAAAAAAAEAAAAAAAA=</HashCode>
-      <FileName>Modeling\TeamDetails.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.TeamMember" Collapsed="true">
-    <Position X="9" Y="0.5" Width="1.5" />
-    <TypeIdentifier>
-      <HashCode>AAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Modeling\TeamMember.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="AppliSoccerObjects.Modeling.User" Collapsed="true">
-    <Position X="17.75" Y="2.5" Width="1.5" />
+  <Class Name="AppliSoccerObjects.Modeling.User">
+    <Position X="8.25" Y="2" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAAEAAAAAAAAAAAAAQAAAAAACAAAAAACAAAAAAAAAAA=</HashCode>
       <FileName>Modeling\User.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="AppliSoccerObjects.Modeling.Team" Collapsed="true">
-    <Position X="16" Y="3.75" Width="1.5" />
+  <Class Name="AppliSoccerObjects.Modeling.TeamMember">
+    <Position X="14.5" Y="5.25" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAEAAAAAAAABAAAAAAAAAQAAAAAgAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>Modeling\Team.cs</FileName>
+      <HashCode>gAAAAkAAAAAggAAAAAAAQAQDAAAAAAAAAAAAAAAAAAg=</HashCode>
+      <FileName>Modeling\TeamMember.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Enum Name="AppliSoccerObjects.Modeling.Role" Collapsed="true">
-    <Position X="14.25" Y="3.75" Width="1.5" />
+  <Class Name="AppliSoccerObjects.Modeling.StaffAdditionalInfo">
+    <Position X="16.5" Y="3.5" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAIAAAQAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Modeling\StaffAdditionalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="AppliSoccerObjects.Modeling.PlayerAdditionalInfo">
+    <Position X="16.25" Y="1.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAEEAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Modeling\PlayerAdditionalInfo.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="AppliSoccerObjects.Modeling.Role">
+    <Position X="18.5" Y="6.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAEAAAAAAAAAAAgAAAAgBAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>Modeling\Enums.cs</FileName>
     </TypeIdentifier>
   </Enum>
-  <Enum Name="AppliSoccerObjects.Modeling.EventType" Collapsed="true">
-    <Position X="12.5" Y="3.75" Width="1.5" />
+  <Enum Name="AppliSoccerObjects.Modeling.MemberType">
+    <Position X="13.5" Y="1" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>BAAAAAAAAAAAAAAAAAAAAAAAEAgAAAAAAAAAAAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAQAAACAAAAAAAAAAAQAAAAA=</HashCode>
       <FileName>Modeling\Enums.cs</FileName>
     </TypeIdentifier>
   </Enum>
