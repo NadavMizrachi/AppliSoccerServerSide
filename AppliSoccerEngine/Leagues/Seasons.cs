@@ -15,7 +15,7 @@ namespace AppliSoccerEngine.Leagues
             }
             else
             {
-                return "2021";
+                return "2022";
             }
         }
     }
