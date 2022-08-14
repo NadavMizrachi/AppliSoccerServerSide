@@ -1,16 +1,46 @@
-﻿How deploy the dll server:
+﻿# How deploy the dll server:
 
 	cd to AppliSoccerServerRestApI/ dir
 
-execute:
+# Then build the app:
+
+	dotnet.exe publish -c Release
+
+# execute:
 	 aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 922577824254.dkr.ecr.us-east-1.amazonaws.com
 
-Then execute:
+# Make sure that there will not be dockers with 'applisoccer' name:
+	docker rmi applisoccer
+
+# Then execute (in current directory, there is DockerFile file):
 	docker build -t applisoccer .
 
-Then execute  (provide version like 1.2) :
+
+# Tag without version (for make the docker be tagged as 'latest')
+# Then execute :
+	docker tag applisoccer 922577824254.dkr.ecr.us-east-1.amazonaws.com/applisoccer
+
+# Then upload to aws repoistory
+
+	docker push 922577824254.dkr.ecr.us-east-1.amazonaws.com/applisoccer
+
+# Tag with specific version:
+# Then execute :
 	docker tag applisoccer 922577824254.dkr.ecr.us-east-1.amazonaws.com/applisoccer:<version>
 
-Then upload to aws repoistory
+# Then upload to aws repoistory
 
 	docker push 922577824254.dkr.ecr.us-east-1.amazonaws.com/applisoccer:<version>
+
+# Then, log to ec2 machine.
+# Stop the dockers apps:
+
+docker-compose stop
+
+# Remove the last versions:
+
+docker-compose rm -f
+
+# Run the script 
+
+./start-applisoccer-server.sh 
